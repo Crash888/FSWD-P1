@@ -1,0 +1,279 @@
+
+<head>
+    <meta charset="utf-8">
+    <title>Fresh Tomatoes!</title>
+
+    <!-- Bootstrap 3 -->
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <style type="text/css" media="screen">
+        body {
+            padding-top: 80px;
+        }
+        #trailer .modal-dialog {
+            margin-top: 200px;
+            width: 640px;
+            height: 480px;
+        }
+
+        .hanging-close {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            z-index: 9001;
+        }
+        #trailer-video {
+            width: 100%;
+            height: 100%;
+        }
+        .movie-poster {
+            margin-bottom: 20px;
+            padding-top: 20px;
+        }
+		
+        .movie-poster:hover {
+            background-color: #D6D6D6;
+            cursor: pointer;
+        }
+
+        .scale-media {
+            padding-bottom: 56.25%;
+            position: relative;
+        }
+        .scale-media iframe {
+            border: none;
+            height: 100%;
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 0;
+            background-color: white;
+        }
+
+        #movie-info .modal-dialog {
+            margin-top: 200px;
+            width: 640px;
+            height: 400px;
+        }
+        
+        .modal-title {
+            font-weight: bold;
+        }
+
+    </style>
+    <script type="text/javascript" charset="utf-8">
+	
+        // Pause the video when the modal is closed
+        $(document).on('click', '.hanging-close, .modal-backdrop, .modal', function (event) {
+            // Remove the src so the player itself gets removed, as this is the only
+            // reliable way to ensure the video stops playing in IE
+            $("#trailer-video-container").empty();
+        });
+				
+	// Start playing the video whenever the trailer modal is opened
+        $(document).on('click', '.watch_trailer', function (event) {
+            var trailerYouTubeId = $(this).attr('data-trailer-youtube-id')
+            var sourceUrl = 'http://www.youtube.com/embed/' + trailerYouTubeId + '?autoplay=1&html5=1';
+            $("#trailer-video-container").empty().append($("<iframe></iframe>", {
+              'id': 'trailer-video',
+              'type': 'text-html',
+              'src': sourceUrl,
+              'frameborder': 0
+            }));
+        });
+
+	// Show movie information in a modal window when poster is clicked
+        $(document).on('click', '.movie-tile', function (event) {
+
+            var movieTitle = $(this).attr('data-movie-title')
+            var storyLine = $(this).attr('data-storyline')
+            var actors = $(this).attr('data-actors')
+            var genre = $(this).attr('data-genre')
+            var releaseDate = $(this).attr('data-release-date')
+            var rating = $(this).attr('data-rating')
+
+            $('.modal-title').text(movieTitle);
+            $('#storyLine').html(storyLine);
+            $('#actors').html(actors);
+            $('#genre').html(genre);
+            $('#releaseDate').html(releaseDate);
+            $('#rating').html(rating);
+
+        });
+        
+	// Animate in the movies when the page loads
+        $(document).ready(function () {
+          $('.movie-poster').hide().first().show("fast", function showNext() {
+            $(this).next("div").show("fast", showNext);
+          });
+        });
+    </script>
+</head>
+
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+
+    <!-- Trailer Video Modal -->
+    <div class="modal" id="trailer">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <a href="#" class="hanging-close" data-dismiss="modal" aria-hidden="true">
+            <img src="https://lh5.ggpht.com/v4-628SilF0HtHuHdu5EzxD7WRqOrrTIDi_MhEG6_qkNtUK5Wg7KPkofp_VJoF7RS2LhxwEFCO1ICHZlc-o_=s0#w=24&h=24"/>
+          </a>
+          <div class="scale-media" id="trailer-video-container">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Movie Details Modal --> 
+    <div class="modal fade" id="movie-info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title" id="myModalLabel">Movie Title</h3>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <h4 class="col-md-3 col-sm-3 col-xs-3 text-right">Story Line:</h4>
+                            <h5 class="col-md-9 col-sm-9 col-xs-15" id="storyLine">StoryLine</h5>
+                        </div>
+                        <div class="form-group">
+                            <h4 class="col-md-3 col-sm-3 col-xs-3 text-right" for="actorsLabel">Actors:</h4>
+                            <h5 class="col-md-9 col-sm-9 col-xs-15" for="actors" id="actors">Actors</h5>
+                        </div>
+                        <div class="form-group">
+                            <h4 class="col-md-3 col-sm-3 col-xs-3 text-right" for="genreLabel">Genre:</h4>
+                            <h5 class="col-md-9 col-sm-9 col-xs-15" for="genre" id="genre">Genre</h5>
+                        </div>
+                        <div class="form-group">
+                            <h4 class="col-md-3 col-sm-3 col-xs-3 text-right" for="releaseDateLabel">Release Date:</h4>
+                            <h5 class="col-md-9 col-sm-9 col-xs-15" for="releaseDate" id="releaseDate">Release Date</h5>
+                        </div>
+                        <div class="form-group">
+                            <h4 class="col-md-3 col-sm-3 col-xs-3 text-right" for="ratingLabel">Rating:</h4>
+                            <h5 class="col-md-9 col-sm-9 col-xs-15" for="rating" id="rating">Rating</h5>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                   <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+    <!-- Main Page Content -->
+    <div class="container">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">Dave's Favourite Movie Trailers</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      
+<div class="col-md-6 col-lg-4 movie-poster text-center"> 
+	<div class="movie-tile text-center" data-toggle="modal" data-target="#movie-info" data-movie-title="Toy Story" data-storyline="A cowboy doll is profoundly threatened and jealous when a new spaceman figure supplants him as top toy in a boy's room." data-actors="Tom Hanks, Tim Allen" data-genre="Animation, Adventure, Comedy" data-rating="G" data-release-date="11/22/1995">
+		<img src="https://upload.wikimedia.org/wikipedia/en/1/13/Toy_Story.jpg" width="220" height="342"></img>
+		<h3>Toy Story</h3>
+    </div>
+	<div class="watch_trailer text-center" data-trailer-youtube-id="4KPTXpQehio" data-toggle="modal" data-target="#trailer" id="watch_trailer">
+        <button type="button" class="btn btn-info">Watch Trailer</button>
+    </div>
+</div>
+
+<div class="col-md-6 col-lg-4 movie-poster text-center"> 
+	<div class="movie-tile text-center" data-toggle="modal" data-target="#movie-info" data-movie-title="Avatar" data-storyline="A Paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home." data-actors="Sam Worthington, Zoe Saldana" data-genre="Action, Adventure, Fantasy" data-rating="PG-13" data-release-date="12/18/2009">
+		<img src="https://upload.wikimedia.org/wikipedia/en/b/b0/Avatar-Teaser-Poster.jpg" width="220" height="342"></img>
+		<h3>Avatar</h3>
+    </div>
+	<div class="watch_trailer text-center" data-trailer-youtube-id="5PSNL1qE6VY" data-toggle="modal" data-target="#trailer" id="watch_trailer">
+        <button type="button" class="btn btn-info">Watch Trailer</button>
+    </div>
+</div>
+
+<div class="col-md-6 col-lg-4 movie-poster text-center"> 
+	<div class="movie-tile text-center" data-toggle="modal" data-target="#movie-info" data-movie-title="Die Hard" data-storyline="John McClane, officer of the NYPD, tries to save wife Holly Gennaro and several others, taken hostage by German terrorist Hans Gruber during a Christmas party at the Nakatomi Plaza in Los Angeles." data-actors="Bruce Willis, Alan Rickman" data-genre="Action, Thriller" data-rating="R" data-release-date="7/20/1988">
+		<img src="https://upload.wikimedia.org/wikipedia/en/7/7e/Die_hard.jpg" width="220" height="342"></img>
+		<h3>Die Hard</h3>
+    </div>
+	<div class="watch_trailer text-center" data-trailer-youtube-id="2TQ-pOvI6Xo" data-toggle="modal" data-target="#trailer" id="watch_trailer">
+        <button type="button" class="btn btn-info">Watch Trailer</button>
+    </div>
+</div>
+
+<div class="col-md-6 col-lg-4 movie-poster text-center"> 
+	<div class="movie-tile text-center" data-toggle="modal" data-target="#movie-info" data-movie-title="Terminator 2: Judgment Day" data-storyline="A cyborg, identical to the one who failed to kill Sarah Connor, must now protect her young son, John Connor, from a more advanced cyborg, made out of liquid metal." data-actors="Arnold Schwarzenegger, Linda Hamilton, Robert Patrick" data-genre="Action, Sci-Fi" data-rating="R" data-release-date="7/3/1991">
+		<img src="https://upload.wikimedia.org/wikipedia/en/8/85/Terminator2poster.jpg" width="220" height="342"></img>
+		<h3>Terminator 2: Judgment Day</h3>
+    </div>
+	<div class="watch_trailer text-center" data-trailer-youtube-id="eajuMYNYtuY" data-toggle="modal" data-target="#trailer" id="watch_trailer">
+        <button type="button" class="btn btn-info">Watch Trailer</button>
+    </div>
+</div>
+
+<div class="col-md-6 col-lg-4 movie-poster text-center"> 
+	<div class="movie-tile text-center" data-toggle="modal" data-target="#movie-info" data-movie-title="Zoolander" data-storyline="At the end of his career, a clueless fashion model is brainwashed to kill the Prime Minister of Malaysia." data-actors="Ben Stiller, Owen Wilson, Will Ferrell" data-genre="Comedy" data-rating="PG-13" data-release-date="9/28/2001">
+		<img src="https://upload.wikimedia.org/wikipedia/en/7/7c/Movie_poster_zoolander.jpg" width="220" height="342"></img>
+		<h3>Zoolander</h3>
+    </div>
+	<div class="watch_trailer text-center" data-trailer-youtube-id="MaEeSJZYkpY" data-toggle="modal" data-target="#trailer" id="watch_trailer">
+        <button type="button" class="btn btn-info">Watch Trailer</button>
+    </div>
+</div>
+
+<div class="col-md-6 col-lg-4 movie-poster text-center"> 
+	<div class="movie-tile text-center" data-toggle="modal" data-target="#movie-info" data-movie-title="Kung Fu Hustle" data-storyline="In Shanghai, China in the 1940s, a wannabe gangster aspires to join the notorious 'Axe Gang' while residents of a housing complex exhibit extraordinary powers in defending their turf." data-actors="Stephen Chow" data-genre="Action, Comedy, Crime" data-rating="R" data-release-date="4/22/2005">
+		<img src="https://upload.wikimedia.org/wikipedia/en/0/00/KungFuHustleHKposter.jpg" width="220" height="342"></img>
+		<h3>Kung Fu Hustle</h3>
+    </div>
+	<div class="watch_trailer text-center" data-trailer-youtube-id="-m3IB7N_PRk" data-toggle="modal" data-target="#trailer" id="watch_trailer">
+        <button type="button" class="btn btn-info">Watch Trailer</button>
+    </div>
+</div>
+
+<div class="col-md-6 col-lg-4 movie-poster text-center"> 
+	<div class="movie-tile text-center" data-toggle="modal" data-target="#movie-info" data-movie-title="Raiders Of The Lost Ark" data-storyline="Archaeologist and adventurer Indiana Jones is hired by the US government to find the Ark of the Covenant before the Nazis." data-actors="Harrison Ford, Karen Allen" data-genre="Action, Adventure" data-rating="PG-13" data-release-date="6/12/1981">
+		<img src="https://upload.wikimedia.org/wikipedia/en/4/4b/Raiders.jpg" width="220" height="342"></img>
+		<h3>Raiders Of The Lost Ark</h3>
+    </div>
+	<div class="watch_trailer text-center" data-trailer-youtube-id="XkkzKHCx154" data-toggle="modal" data-target="#trailer" id="watch_trailer">
+        <button type="button" class="btn btn-info">Watch Trailer</button>
+    </div>
+</div>
+
+<div class="col-md-6 col-lg-4 movie-poster text-center"> 
+	<div class="movie-tile text-center" data-toggle="modal" data-target="#movie-info" data-movie-title="Starship Troopers" data-storyline="Humans in a fascistic, militaristic future do battle with giant alien bugs in a fight for survival." data-actors="Casper Van Dien, Denise Richards, Neil Patrick Harris" data-genre="Action, Sci-Fi" data-rating="R" data-release-date="11/7/1997">
+		<img src="https://upload.wikimedia.org/wikipedia/en/d/df/Starship_Troopers_-_movie_poster.jpg" width="220" height="342"></img>
+		<h3>Starship Troopers</h3>
+    </div>
+	<div class="watch_trailer text-center" data-trailer-youtube-id="Y07I_KER5fE" data-toggle="modal" data-target="#trailer" id="watch_trailer">
+        <button type="button" class="btn btn-info">Watch Trailer</button>
+    </div>
+</div>
+
+<div class="col-md-6 col-lg-4 movie-poster text-center"> 
+	<div class="movie-tile text-center" data-toggle="modal" data-target="#movie-info" data-movie-title="Fight Club" data-storyline="An insomniac office worker, looking for a way to change his life, crosses paths with a devil-may-care soap maker, forming an underground fight club that evolves into something much, much more..." data-actors="Edward Norton, Brad Pitt" data-genre="Drama" data-rating="R" data-release-date="10/15/1999">
+		<img src="https://upload.wikimedia.org/wikipedia/en/f/fc/Fight_Club_poster.jpg" width="220" height="342"></img>
+		<h3>Fight Club</h3>
+    </div>
+	<div class="watch_trailer text-center" data-trailer-youtube-id="SUXWAEX2jlg" data-toggle="modal" data-target="#trailer" id="watch_trailer">
+        <button type="button" class="btn btn-info">Watch Trailer</button>
+    </div>
+</div>
+
+    </div>
+	
+	
+  </body>
+</html>
